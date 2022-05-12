@@ -2,7 +2,7 @@ import React, {useState} from "react";
 const Navbar = () => {
     return <>
         <div className="navbar">
-            <div className="logo">WhatsNext</div>
+            <div className="logo">What's Next</div>
         </div>
     </>;
 };

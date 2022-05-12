@@ -1,5 +1,8 @@
 class Task{
-    constructor(description, duration, dispBegin, dispEnd, isDone, weekDays, timeBegin, timeEnd) {
+    constructor(id, description, duration, dispBegin, dispEnd, isDone, weekDays, timeBegin, timeEnd) {
+        //Int - Task identification
+        this.id = id;
+        
         //String - Description of the task
         this.description = description; 
 
@@ -15,8 +18,8 @@ class Task{
         //Boolean - True => If the task's checkbox was marked / False => Otherwise
         this.isDone = isDone; 
 
-        //Vector with 7 Booleans - Indicates in which days the task needs to be done with 1, from Sunday to Saturday
-        //e.g. [0, 0, 0, 1, 0, 1, 0] indicates the task needs to be done on Wednesday and Friday
+        //Vector with 7 Booleans - Indicates in which days the task needs to be done with true, from Sunday to Saturday
+        //e.g. [false, false, false, true, false, true, false] indicates the task needs to be done on Wednesday and Friday
         this.weekDays = weekDays;
 
         //[Int, Int] - Beginning of which time the task was allocated in [hours, minutes]
@@ -27,6 +30,10 @@ class Task{
     }
 
     //Getters
+    get getId(){
+        return this.id;
+    }
+
     get getDescription(){
         return this.description;
     }
@@ -60,6 +67,10 @@ class Task{
     }
 
     //Setters
+    setId(_id){
+        this.id = _id;
+    }
+    
     setDescription(_description){
         this.description = _description;
     }

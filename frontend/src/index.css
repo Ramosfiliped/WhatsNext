@@ -1,11 +1,13 @@
-body {
+html, body, #root {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  height: 100%;
+  font-family: Roboto, sans-serif;
 }
 
 .pages{
-  height: 80vh;
+  height: 79%;
   width: 100%;
   display: flex;
   justify-content: center;
