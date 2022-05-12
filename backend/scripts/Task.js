@@ -1,14 +1,4 @@
 class Task{
-    //Default values for the Task class.
-    description = "";
-    duration = 0;
-    dispBegin = [0, 0];
-    dispEnd = [0, 0];
-    isDone = False;
-    weekDays = [0, 0, 0, 0, 0, 0, 0];
-    timeBegin = [0, 0];
-    timeEnd = [0, 0];
-
     constructor(description, duration, dispBegin, dispEnd, isDone, weekDays, timeBegin, timeEnd) {
         //String - Description of the task
         this.description = description; 
@@ -102,3 +92,17 @@ class Task{
         this.timeEnd = _timeEnd;
     }
 }
+
+/*
+class Planner{
+    
+    constructor([tasks]){
+        
+    }
+    
+    {
+        "Domingo" : [task1, task2...],
+        "Segunda" : [task3, task4...]
+    }
+}
+*/
