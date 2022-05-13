@@ -1,0 +1,18 @@
+p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.container {
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  padding: 12px 20px;
+
+  > p:nth-of-type(3) {
+    margin-top: 10px;
+  }
+}
