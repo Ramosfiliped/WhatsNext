@@ -105,13 +105,13 @@ const CreateTask = () => {
           <div className={styles.inputField}>
             <label>Dias da Semana</label>
             <div>
-              <button onClick={() => handleWeekDaysClick(0)} className={weekDays[0] && styles.active}>Dom</button>
-              <button onClick={() => handleWeekDaysClick(1)} className={weekDays[1] && styles.active}>Seg</button>
-              <button onClick={() => handleWeekDaysClick(2)} className={weekDays[2] && styles.active}>Ter</button>
-              <button onClick={() => handleWeekDaysClick(3)} className={weekDays[3] && styles.active}>Qua</button>
-              <button onClick={() => handleWeekDaysClick(4)} className={weekDays[4] && styles.active}>Qui</button>
-              <button onClick={() => handleWeekDaysClick(5)} className={weekDays[5] && styles.active}>Sex</button>
-              <button onClick={() => handleWeekDaysClick(6)} className={weekDays[6] && styles.active}>Sáb</button>
+              <button onClick={() => handleWeekDaysClick(0)} className={weekDays[0] ? styles.active : undefined}>Dom</button>
+              <button onClick={() => handleWeekDaysClick(1)} className={weekDays[1] ? styles.active : undefined}>Seg</button>
+              <button onClick={() => handleWeekDaysClick(2)} className={weekDays[2] ? styles.active : undefined}>Ter</button>
+              <button onClick={() => handleWeekDaysClick(3)} className={weekDays[3] ? styles.active : undefined}>Qua</button>
+              <button onClick={() => handleWeekDaysClick(4)} className={weekDays[4] ? styles.active : undefined}>Qui</button>
+              <button onClick={() => handleWeekDaysClick(5)} className={weekDays[5] ? styles.active : undefined}>Sex</button>
+              <button onClick={() => handleWeekDaysClick(6)} className={weekDays[6] ? styles.active : undefined}>Sáb</button>
             </div>
           </div>
 
