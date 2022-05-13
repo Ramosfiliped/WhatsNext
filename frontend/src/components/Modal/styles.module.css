@@ -3,7 +3,7 @@
   width: 100%;
   height: 100%;
   z-index: 999;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .content {
@@ -11,10 +11,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 500px;
-  height: 700px;
-  max-width: 50%;
-  max-height: 70%;
+  width: fit-content;
   z-index: 999;
   border: 1px solid black;
   background-color: white;
