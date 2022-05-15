@@ -94,7 +94,7 @@ const CreateTask = ({ isOpen, setIsOpen, update }) => {
 
   useEffect(() => {
     setIsModalOpen(isOpen);
-  }, [])
+  }, [isOpen])
 
   return (
     <>

@@ -131,7 +131,7 @@ const EditTask = ({ task, isOpen, setIsOpen, update }) => {
 
   useEffect(() => {
     setIsModalOpen(isOpen);
-  }, [])
+  }, [isOpen])
 
   return (
     <>
