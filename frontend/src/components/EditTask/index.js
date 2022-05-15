@@ -1,4 +1,4 @@
-import react, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,36 +8,28 @@ import { v4 } from 'uuid';
 import styles from './styles.module.scss';
 import Modal from '../Modal';
 
-const EditTask = ({id}) => {
-  const data = JSON.parse(localStorage.getItem('tasks'));
-  let oldTask;
-  data.forEach(element => {
-    if (element.id === id){
-      oldTask = element
-    }
-  });
+const EditTask = ({ task, isOpen, setIsOpen, update }) => {
 
-  const index = data.findIndex((task) => {
-    return task.id == id;
-  });
-
-  const [descriptionInput, setDescriptionInput] = useState(oldTask.description);
-  const [weekDays, setWeekDays] = useState(oldTask.weekDays);
-  const [durationInput, setDurationInput] = useState(oldTask.duration);
+  const [descriptionInput, setDescriptionInput] = useState('');
+  const [weekDays, setWeekDays] = useState([]);
+  const [durationInput, setDurationInput] = useState('00:00');
   const [dispBeginInput, setDispBeginInput] = useState('00:00');
   const [dispEndInput, setDispEndInput] = useState('00:00');
 
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    durationToTime(oldTask.duration);
-    dispBeginToTime(oldTask.dispBegin);
-    dispEndToTime(oldTask.dispEnd);
-  }, []);
+    if (!task) return;
+    durationToTime(task.duration);
+    dispBeginToTime(task.dispBegin);
+    dispEndToTime(task.dispEnd);
+    setDescriptionInput(task.description);
+    setWeekDays(task.weekDays);
+  }, [task]);
 
   const handleDescriptionInput = useCallback((e) => {
     setDescriptionInput(e.target.value);
-  }, [descriptionInput]);
+  }, []);
 
   const handleWeekDaysClick = useCallback((index) => {
     const newWeekDays = weekDays.slice();
@@ -47,41 +39,42 @@ const EditTask = ({id}) => {
 
   const handleToggleModal = useCallback(() => {
     setIsModalOpen(!isModalOpen);
-  }, [isModalOpen]);
+    setIsOpen(!isModalOpen);
+  }, [isModalOpen, setIsOpen]);
 
   const handleDurationInput = useCallback((e) => {
     setDurationInput(e.target.value);
-  }, [durationInput]);
+  }, []);
 
   const handleDispBeginInput = useCallback((e) => {
     setDispBeginInput(e.target.value);
-  }, [dispBeginInput]);
+  }, []);
 
   const handleDispEndInput = useCallback((e) => {
     setDispEndInput(e.target.value);
-  }, [dispEndInput]);
+  }, []);
 
   const durationToTime = function (duration){
     let hour = Math.floor(duration/60).toString();
     let minute = (duration%60).toString();
-    if(hour.length == 1) hour = "0" + hour;
-    if(minute.length == 1) minute = "0" + minute;
+    if(hour.length === 1) hour = "0" + hour;
+    if(minute.length === 1) minute = "0" + minute;
     setDurationInput(hour + ":" + minute);
   }
 
   const dispBeginToTime = function (disp){
     let hour = disp[0].toString()
     let minute = disp[1].toString()
-    if (hour.length == 1) hour = '0' + hour;
-    if (minute.length == 1) minute = '0' + minute;
+    if (hour.length === 1) hour = '0' + hour;
+    if (minute.length === 1) minute = '0' + minute;
     setDispBeginInput(hour + ":" + minute);
   }
 
   const dispEndToTime = function (disp){
     let hour = disp[0].toString()
     let minute = disp[1].toString()
-    if (hour.length == 1) hour = '0' + hour;
-    if (minute.length == 1) minute = '0' + minute;
+    if (hour.length === 1) hour = '0' + hour;
+    if (minute.length === 1) minute = '0' + minute;
     setDispEndInput(hour + ":" + minute);
   }
 
@@ -90,7 +83,7 @@ const EditTask = ({id}) => {
     const dispBegin = dispBeginInput.split(':').map(n => Number(n));
     const dispEnd = dispEndInput.split(':').map(n => Number(n));
 
-    if (descriptionInput.length == 0) {
+    if (descriptionInput.length === 0) {
       toast.error('Descrição inválida.');
       return;
     }
@@ -100,8 +93,8 @@ const EditTask = ({id}) => {
       return;
     }
 
-    const task = {
-      id: id,
+    const newTask = {
+      id: v4(),
       description: descriptionInput,
       duration: durationHours * 60 + durationMinutes,
       dispBegin,
@@ -112,22 +105,33 @@ const EditTask = ({id}) => {
       timeEnd: undefined
     }
 
-    
+    const currentTasks = JSON.parse(localStorage.getItem('tasks'));
 
-    let currentTasks = localStorage.getItem('tasks');
-    if (!currentTasks) currentTasks = '[]';
-
-    currentTasks = JSON.parse(currentTasks);
-    //currentTasks.push(task);
-    currentTasks[index] = task;
-    console.log(index);
+    if (task.region === 0) {
+      const index = currentTasks.toBeAllocated.findIndex(_task => _task.id === task.id);
+      currentTasks.toBeAllocated[index] = newTask;
+    } else if (task.region === 1) {
+      const index = currentTasks.nonAllocated.findIndex(_task => _task.id === task.id);
+      currentTasks.nonAllocated.splice(index, 1);
+      currentTasks.toBeAllocated.push(newTask);
+    } else {
+      const index = currentTasks[task.day].findIndex(_task => _task.id === task.id);
+      currentTasks[task.day].splice(index, 1);
+      currentTasks.toBeAllocated.push(newTask);
+    }
 
     localStorage.setItem('tasks', JSON.stringify(currentTasks));
 
     setIsModalOpen(false);
+    setIsOpen(false);
+    update();
 
     toast.success('Tarefa editada com sucesso!');
-  }, [descriptionInput, durationInput, dispBeginInput, dispEndInput, weekDays]);
+  }, [descriptionInput, durationInput, dispBeginInput, dispEndInput, weekDays, setIsOpen, task, update]);
+
+  useEffect(() => {
+    setIsModalOpen(isOpen);
+  }, [])
 
   return (
     <>
@@ -149,13 +153,13 @@ const EditTask = ({id}) => {
           <div className={styles.inputField}>
             <label>Dias da Semana</label>
             <div>
-              <button onClick={() => handleWeekDaysClick(0)} className={weekDays[0] && styles.active}>Dom</button>
-              <button onClick={() => handleWeekDaysClick(1)} className={weekDays[1] && styles.active}>Seg</button>
-              <button onClick={() => handleWeekDaysClick(2)} className={weekDays[2] && styles.active}>Ter</button>
-              <button onClick={() => handleWeekDaysClick(3)} className={weekDays[3] && styles.active}>Qua</button>
-              <button onClick={() => handleWeekDaysClick(4)} className={weekDays[4] && styles.active}>Qui</button>
-              <button onClick={() => handleWeekDaysClick(5)} className={weekDays[5] && styles.active}>Sex</button>
-              <button onClick={() => handleWeekDaysClick(6)} className={weekDays[6] && styles.active}>Sáb</button>
+              <button onClick={() => handleWeekDaysClick(0)} className={weekDays[0] ? styles.active : ''}>Dom</button>
+              <button onClick={() => handleWeekDaysClick(1)} className={weekDays[1] ? styles.active : ''}>Seg</button>
+              <button onClick={() => handleWeekDaysClick(2)} className={weekDays[2] ? styles.active : ''}>Ter</button>
+              <button onClick={() => handleWeekDaysClick(3)} className={weekDays[3] ? styles.active : ''}>Qua</button>
+              <button onClick={() => handleWeekDaysClick(4)} className={weekDays[4] ? styles.active : ''}>Qui</button>
+              <button onClick={() => handleWeekDaysClick(5)} className={weekDays[5] ? styles.active : ''}>Sex</button>
+              <button onClick={() => handleWeekDaysClick(6)} className={weekDays[6] ? styles.active : ''}>Sáb</button>
             </div>
           </div>
 

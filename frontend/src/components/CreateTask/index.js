@@ -1,4 +1,4 @@
-import react, { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,7 +8,7 @@ import { v4 } from 'uuid';
 import styles from './styles.module.scss';
 import Modal from '../Modal';
 
-const CreateTask = () => {
+const CreateTask = ({ isOpen, setIsOpen, update }) => {
 
   const [descriptionInput, setDescriptionInput] = useState('');
   const [weekDays, setWeekDays] = useState([false, false, false, false, false, false, false]);
@@ -16,11 +16,11 @@ const CreateTask = () => {
   const [dispBeginInput, setDispBeginInput] = useState('00:00');
   const [dispEndInput, setDispEndInput] = useState('00:00');
 
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDescriptionInput = useCallback((e) => {
     setDescriptionInput(e.target.value);
-  }, [descriptionInput]);
+  }, []);
 
   const handleWeekDaysClick = useCallback((index) => {
     const newWeekDays = weekDays.slice();
@@ -30,26 +30,27 @@ const CreateTask = () => {
 
   const handleToggleModal = useCallback(() => {
     setIsModalOpen(!isModalOpen);
-  }, [isModalOpen]);
+    setIsOpen(!isModalOpen);
+  }, [isModalOpen, setIsOpen]);
 
   const handleDurationInput = useCallback((e) => {
     setDurationInput(e.target.value);
-  }, [durationInput]);
+  }, []);
 
   const handleDispBeginInput = useCallback((e) => {
     setDispBeginInput(e.target.value);
-  }, [dispBeginInput]);
+  }, []);
 
   const handleDispEndInput = useCallback((e) => {
     setDispEndInput(e.target.value);
-  }, [dispEndInput]);
+  }, []);
 
   const handleAddTask = useCallback(() => {
     const [ durationHours, durationMinutes ] = durationInput.split(':').map(n => Number(n));
     const dispBegin = dispBeginInput.split(':').map(n => Number(n));
     const dispEnd = dispEndInput.split(':').map(n => Number(n));
 
-    if (descriptionInput.length == 0) {
+    if (descriptionInput.length === 0) {
       toast.error('Descrição inválida.');
       return;
     }
@@ -71,19 +72,29 @@ const CreateTask = () => {
       timeEnd: undefined
     }
 
-    let currentTasks = localStorage.getItem('tasks');
-    if (!currentTasks) currentTasks = '[]';
+    const currentTasks = JSON.parse(localStorage.getItem('tasks'));
 
-    currentTasks = JSON.parse(currentTasks);
-    currentTasks.push(task);
+    currentTasks.toBeAllocated.push(task);
 
     localStorage.setItem('tasks', JSON.stringify(currentTasks));
 
     setIsModalOpen(false);
+    setIsOpen(false);
+    update();
+
+    setDescriptionInput('');
+    setWeekDays([false, false, false, false, false, false, false]);
+    setDurationInput('00:00');
+    setDispBeginInput('00:00');
+    setDispEndInput('00:00');
 
     toast.success('Tarefa criada com sucesso!');
 
-  }, [descriptionInput, durationInput, dispBeginInput, dispEndInput, weekDays]);
+  }, [descriptionInput, durationInput, dispBeginInput, dispEndInput, weekDays, setIsOpen, update]);
+
+  useEffect(() => {
+    setIsModalOpen(isOpen);
+  }, [])
 
   return (
     <>
@@ -105,13 +116,13 @@ const CreateTask = () => {
           <div className={styles.inputField}>
             <label>Dias da Semana</label>
             <div>
-              <button onClick={() => handleWeekDaysClick(0)} className={weekDays[0] ? styles.active : undefined}>Dom</button>
-              <button onClick={() => handleWeekDaysClick(1)} className={weekDays[1] ? styles.active : undefined}>Seg</button>
-              <button onClick={() => handleWeekDaysClick(2)} className={weekDays[2] ? styles.active : undefined}>Ter</button>
-              <button onClick={() => handleWeekDaysClick(3)} className={weekDays[3] ? styles.active : undefined}>Qua</button>
-              <button onClick={() => handleWeekDaysClick(4)} className={weekDays[4] ? styles.active : undefined}>Qui</button>
-              <button onClick={() => handleWeekDaysClick(5)} className={weekDays[5] ? styles.active : undefined}>Sex</button>
-              <button onClick={() => handleWeekDaysClick(6)} className={weekDays[6] ? styles.active : undefined}>Sáb</button>
+              <button onClick={() => handleWeekDaysClick(0)} className={weekDays[0] ? styles.active : ''}>Dom</button>
+              <button onClick={() => handleWeekDaysClick(1)} className={weekDays[1] ? styles.active : ''}>Seg</button>
+              <button onClick={() => handleWeekDaysClick(2)} className={weekDays[2] ? styles.active : ''}>Ter</button>
+              <button onClick={() => handleWeekDaysClick(3)} className={weekDays[3] ? styles.active : ''}>Qua</button>
+              <button onClick={() => handleWeekDaysClick(4)} className={weekDays[4] ? styles.active : ''}>Qui</button>
+              <button onClick={() => handleWeekDaysClick(5)} className={weekDays[5] ? styles.active : ''}>Sex</button>
+              <button onClick={() => handleWeekDaysClick(6)} className={weekDays[6] ? styles.active : ''}>Sáb</button>
             </div>
           </div>
 

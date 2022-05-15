@@ -1,5 +1,3 @@
-import react from 'react';
-
 import styles from './styles.module.css';
 
 const Modal = ({ children, isOpen }) => {

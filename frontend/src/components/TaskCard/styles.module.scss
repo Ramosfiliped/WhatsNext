@@ -4,6 +4,7 @@ p {
 }
 
 .container {
+  position: relative;
   border: 1px solid black;
   display: flex;
   align-items: center;
@@ -12,7 +13,70 @@ p {
 
   padding: 12px 20px;
 
+  width: fit-content;
+  height: fit-content;
+
   > p:nth-of-type(3) {
     margin-top: 10px;
+  }
+}
+
+.small {
+  padding: 6px 10px;
+  p {
+    font-size: 12px !important;
+  }
+}
+
+.actions {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  opacity: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  transition: 0.3s;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  > button {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    outline: none;
+    background-color: white;
+    border: 0;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+
+    transition: 0.3s;
+
+    cursor: pointer;
+
+    &:active {
+      box-shadow: none;
+      transform: translate(1px, 1px);
+    }
+
+    &:first-of-type {
+      &:hover {
+        background-color: rgb(97, 25, 231);
+        color: white;
+      }
+    }
+
+    &:last-of-type {
+      &:hover {
+        background-color: rgb(218, 0, 0);
+        color: white;
+      }
+    }
   }
 }
