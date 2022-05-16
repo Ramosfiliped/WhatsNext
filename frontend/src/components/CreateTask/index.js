@@ -55,6 +55,11 @@ const CreateTask = ({ isOpen, setIsOpen, update }) => {
       return;
     }
 
+    if (durationHours * 60 + durationMinutes === 0) {
+      toast.error('Duração inválida.');
+      return;
+    }
+
     if (dispBegin[0] * 60 + dispBegin[1] >= dispEnd[0] * 60 + dispEnd[1]) {
       toast.error('Intervalo de disponibilidade inválido.');
       return;

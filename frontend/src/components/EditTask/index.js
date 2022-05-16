@@ -88,6 +88,11 @@ const EditTask = ({ task, isOpen, setIsOpen, update }) => {
       return;
     }
 
+    if (durationHours * 60 + durationMinutes === 0) {
+      toast.error('Duração inválida.');
+      return;
+    }
+
     if (dispBegin[0] * 60 + dispBegin[1] >= dispEnd[0] * 60 + dispEnd[1]) {
       toast.error('Intervalo de disponibilidade inválido.');
       return;
@@ -137,7 +142,7 @@ const EditTask = ({ task, isOpen, setIsOpen, update }) => {
     <>
       <Modal isOpen={isModalOpen}>
         <div className={styles.container}>
-          <h1>Adicionar Tarefa</h1>
+          <h1>Editar Tarefa</h1>
           <div className={styles.divider}></div>
 
           <div className={styles.inputField}>

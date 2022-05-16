@@ -114,46 +114,5 @@
   > div {
     display: flex;
     gap: 16px;
-
-    > button {
-      height: 40px;
-      font-size: 16px;
-      border: 0;
-      border-radius: 4px;
-      outline: none;
-
-      padding: 4px 14px;
-      font-weight: bold;
-
-      cursor: pointer;
-  
-      transition: 0.15s;
-    }
-  }
-}
-
-.btnPrimary {
-  background-color: rgb(108, 54, 255);
-  color: white;
-  &:hover {
-    background-color: rgb(122, 74, 255);
-  }
-  &:active {
-    background-color: rgb(146, 107, 255);
-  }
-}
-
-.btnSecondary {
-  background-color: rgb(255, 255, 255);
-  color: rgb(108, 54, 255);
-
-  border: 2px solid rgba(108, 54, 255, 0.4) !important;
-
-  &:hover {
-    background-color: rgb(108, 54, 255);
-    color: white;
-  }
-  &:active {
-    background-color: rgb(122, 74, 255);
   }
 }

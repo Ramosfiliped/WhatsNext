@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+
 import CreateTask from '../components/CreateTask';
 import EditTask from "../components/EditTask";
 import TaskCard from "../components/TaskCard";
+import NotificationModal from "../components/NotificationModal";
 
 import styles from './styles.module.scss';
 
@@ -10,6 +12,7 @@ const Home = () => {
     const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
     const [isEditTaskOpen, setIsEditTaskOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(undefined);
+    const [removingTask, setRemovingTask] = useState({});
     const [tasks, setTasks] = useState({
         toBeAllocated: [],
         sunday: [],
@@ -21,6 +24,8 @@ const Home = () => {
         saturday: [],
         nonAllocated: [],
     });
+
+    const [isNotificationOpen, setIsNotificationOpen] = useState(true);
 
     const dayOfWeek = useMemo(() => {
         const days = [
@@ -49,7 +54,15 @@ const Home = () => {
         setIsEditTaskOpen(true);
     }, []);
 
-    const removeTask = useCallback((task, region, day = null) => {
+    const handleRemoveTask = useCallback((task, region, day = null) => {
+        setRemovingTask({ task, region, day });
+        setIsNotificationOpen(true);
+    }, []);
+
+    const removeTask = useCallback(() => {
+        const { task, region, day } = removingTask;
+        console.log(removingTask, task, region, day)
+        
         if (region === 0) {
             const index = tasks.toBeAllocated.findIndex(_task => _task.id === task.id);
             tasks.toBeAllocated.splice(index, 1);
@@ -63,7 +76,9 @@ const Home = () => {
 
         localStorage.setItem('tasks', JSON.stringify(tasks));
         updateTasks();
-    }, [updateTasks, tasks]);
+
+        setIsNotificationOpen(false);
+    }, [removingTask, updateTasks, tasks]);
 
     useEffect(() => {
         updateTasks();
@@ -83,7 +98,7 @@ const Home = () => {
                                 dispEnd={task.dispEnd}
                                 duration={task.duration}
                                 editHandler={() => editTask(task, 0)}
-                                removeHandler={() => removeTask(task, 0)}
+                                removeHandler={() => handleRemoveTask(task, 0)}
                             />
                         ))}
                     </div>
@@ -99,7 +114,7 @@ const Home = () => {
                                 dispEnd={task.dispEnd}
                                 duration={task.duration}
                                 editHandler={() => editTask(task, 1)}
-                                removeHandler={() => removeTask(task, 1)}
+                                removeHandler={() => handleRemoveTask(task, 1)}
                             />
                         ))}
                     </div>
@@ -124,7 +139,7 @@ const Home = () => {
                                     dispEnd={task.dispEnd}
                                     duration={task.duration}
                                     editHandler={() => editTask(task, 2, name)}
-                                    removeHandler={() => removeTask(task, 2, name)}
+                                    removeHandler={() => handleRemoveTask(task, 2, name)}
                                 />
                             ))}
                         </div>
@@ -135,15 +150,15 @@ const Home = () => {
             <div className={styles.divider}></div>
             <div className={styles.footer}>
                 <div>
-                    <button className={styles.btnSecondary}>
+                    <button className='btnSecondary'>
                         <i className="fa-solid fa-arrows-rotate"></i> Organizar
                     </button>
                 </div>
                 <div>
-                    <button className={styles.btnSecondary} onClick={() => setIsCreateTaskOpen(true)}>
+                    <button className='btnSecondary' onClick={() => setIsCreateTaskOpen(true)}>
                         Adicionar tarefa
                     </button>
-                    <button className={styles.btnPrimary}>
+                    <button className='btnPrimary'>
                         Salvar
                     </button>
                 </div>
@@ -160,6 +175,17 @@ const Home = () => {
                 isOpen={isEditTaskOpen}
                 setIsOpen={setIsEditTaskOpen}
                 update={updateTasks}
+            />
+
+            <NotificationModal
+                type='alert'
+                message='Deseja remover a tarefa?'
+                text='Remover uma tarefa a excluirá do seu planejamento. Essa ação é irreversível!'
+                btn1Text='Cancelar'
+                btn2Text='Confirmar'
+                isOpen={isNotificationOpen}
+                onClose={() => {setIsNotificationOpen(false)}}
+                onSuccess={() => {removeTask()}}
             />
         </div>
     </>;
