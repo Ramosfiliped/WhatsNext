@@ -25,7 +25,7 @@ const Home = () => {
         nonAllocated: [],
     });
 
-    const [isNotificationOpen, setIsNotificationOpen] = useState(true);
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
     const dayOfWeek = useMemo(() => {
         const days = [
