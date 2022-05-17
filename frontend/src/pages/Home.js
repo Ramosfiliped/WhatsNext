@@ -5,6 +5,8 @@ import EditTask from "../components/EditTask";
 import TaskCard from "../components/TaskCard";
 import NotificationModal from "../components/NotificationModal";
 
+import scheduleAlgorithm from "../utils/scheduleAlgorithm";
+
 import styles from './styles.module.scss';
 
 const Home = () => {
@@ -61,7 +63,6 @@ const Home = () => {
 
     const removeTask = useCallback(() => {
         const { task, region, day } = removingTask;
-        console.log(removingTask, task, region, day)
         
         if (region === 0) {
             const index = tasks.toBeAllocated.findIndex(_task => _task.id === task.id);
@@ -84,6 +85,13 @@ const Home = () => {
         updateTasks();
     }, []);
 
+    const schedule = useCallback(() => {
+        const newTasks = scheduleAlgorithm(tasks);
+        setTasks(newTasks);
+        localStorage.setItem('tasks', JSON.stringify(newTasks));
+        updateTasks();
+    }, [tasks, updateTasks]);
+
     return <>
         <div className={`pages ${styles.container}`}>
             <div className={styles.tasks}>
@@ -96,6 +104,8 @@ const Home = () => {
                                 description={task.description}
                                 dispBegin={task.dispBegin}
                                 dispEnd={task.dispEnd}
+                                timeBegin={task.timeBegin}
+                                timeEnd={task.timeEnd}
                                 duration={task.duration}
                                 editHandler={() => editTask(task, 0)}
                                 removeHandler={() => handleRemoveTask(task, 0)}
@@ -112,6 +122,8 @@ const Home = () => {
                                 description={task.description}
                                 dispBegin={task.dispBegin}
                                 dispEnd={task.dispEnd}
+                                timeBegin={task.timeBegin}
+                                timeEnd={task.timeEnd}
                                 duration={task.duration}
                                 editHandler={() => editTask(task, 1)}
                                 removeHandler={() => handleRemoveTask(task, 1)}
@@ -137,6 +149,8 @@ const Home = () => {
                                     description={task.description}
                                     dispBegin={task.dispBegin}
                                     dispEnd={task.dispEnd}
+                                    timeBegin={task.timeBegin}
+                                    timeEnd={task.timeEnd}
                                     duration={task.duration}
                                     editHandler={() => editTask(task, 2, name)}
                                     removeHandler={() => handleRemoveTask(task, 2, name)}
@@ -150,7 +164,7 @@ const Home = () => {
             <div className={styles.divider}></div>
             <div className={styles.footer}>
                 <div>
-                    <button className='btnSecondary'>
+                    <button className='btnSecondary' onClick={schedule}>
                         <i className="fa-solid fa-arrows-rotate"></i> Organizar
                     </button>
                 </div>

@@ -112,18 +112,18 @@ const EditTask = ({ task, isOpen, setIsOpen, update }) => {
 
     const currentTasks = JSON.parse(localStorage.getItem('tasks'));
 
-    if (task.region === 0) {
-      const index = currentTasks.toBeAllocated.findIndex(_task => _task.id === task.id);
-      currentTasks.toBeAllocated[index] = newTask;
-    } else if (task.region === 1) {
-      const index = currentTasks.nonAllocated.findIndex(_task => _task.id === task.id);
-      currentTasks.nonAllocated.splice(index, 1);
-      currentTasks.toBeAllocated.push(newTask);
-    } else {
-      const index = currentTasks[task.day].findIndex(_task => _task.id === task.id);
-      currentTasks[task.day].splice(index, 1);
-      currentTasks.toBeAllocated.push(newTask);
-    }
+    let index = currentTasks.toBeAllocated.findIndex(_task => _task.id === task.id);
+    if (index != -1) currentTasks.toBeAllocated.splice(index, 1);
+    index = currentTasks.nonAllocated.findIndex(_task => _task.id === task.id);
+    if (index != -1) currentTasks.nonAllocated.splice(index, 1);
+
+    const days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+    days.forEach(day => {
+      index = currentTasks[day].findIndex(_task => _task.id === task.id);
+      if (index != -1) currentTasks[day].splice(index, 1);
+    });
+
+    currentTasks.toBeAllocated.push(newTask);
 
     localStorage.setItem('tasks', JSON.stringify(currentTasks));
 
