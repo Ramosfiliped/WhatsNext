@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 import { v4 } from 'uuid';
 
@@ -107,7 +106,8 @@ const EditTask = ({ task, isOpen, setIsOpen, update }) => {
       isDone: false,
       weekDays,
       timeBegin: undefined,
-      timeEnd: undefined
+      timeEnd: undefined,
+      isDone: false,
     }
 
     const currentTasks = JSON.parse(localStorage.getItem('tasks'));
@@ -211,18 +211,6 @@ const EditTask = ({ task, isOpen, setIsOpen, update }) => {
 
         </div>
       </Modal>
-
-      <ToastContainer
-        position="bottom-center"
-        autoClose={5000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </>
   )
 }

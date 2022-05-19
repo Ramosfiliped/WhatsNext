@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import CreateTask from '../components/CreateTask';
 import EditTask from "../components/EditTask";
 import TaskCard from "../components/TaskCard";
@@ -41,7 +44,7 @@ const Home = () => {
         ]
         return days;
     }, []);
-
+    
     const updateTasks = useCallback(() => {
         const data = localStorage.getItem('tasks');
         if (!data) {
@@ -60,6 +63,15 @@ const Home = () => {
         setRemovingTask({ task, region, day });
         setIsNotificationOpen(true);
     }, []);
+
+    const markTask = useCallback((task, day, checked) => {
+        const data = JSON.parse(localStorage.getItem('tasks'));
+        const index = data[day].findIndex(_task => task.id == _task.id);
+        data[day][index].isDone = checked;
+
+        setTasks(data);
+        localStorage.setItem('tasks', JSON.stringify(data));
+    }, [setTasks]);
 
     const removeTask = useCallback(() => {
         const { task, region, day } = removingTask;
@@ -154,6 +166,8 @@ const Home = () => {
                                     duration={task.duration}
                                     editHandler={() => editTask(task, 2, name)}
                                     removeHandler={() => handleRemoveTask(task, 2, name)}
+                                    markTask={(checked) => markTask(task, name, checked)}
+                                    isDone={task.isDone}
                                 />
                             ))}
                         </div>
@@ -200,6 +214,18 @@ const Home = () => {
                 isOpen={isNotificationOpen}
                 onClose={() => {setIsNotificationOpen(false)}}
                 onSuccess={() => {removeTask()}}
+            />
+
+            <ToastContainer
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
             />
         </div>
     </>;
