@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import styles from './styles.module.scss';
 
-const TaskCard = ({small = false, description, duration, dispBegin, dispEnd, timeBegin, timeEnd, editHandler, removeHandler, markTask, isDone }) => {
+const TaskCard = ({small = false, description, duration, dispBegin, dispEnd, timeBegin, timeEnd, color, editHandler, removeHandler, markTask, isDone }) => {
 
   const [isChecked, setIsChecked] = useState(isDone);
 
@@ -31,7 +31,7 @@ const TaskCard = ({small = false, description, duration, dispBegin, dispEnd, tim
   }, []);
 
   return (
-    <div className={`${styles.container} ${small ? styles.small : ''}`}>
+    <div className={`${styles.container} ${small ? styles.small : ''}`} >
       <p>{description}</p>
       <p>{parsedDuration}h</p>
       {
@@ -44,14 +44,19 @@ const TaskCard = ({small = false, description, duration, dispBegin, dispEnd, tim
         <input type="checkbox" onChange={(e) => handleCheckboxChange(e)} checked={isChecked} />
       </div>}
 
-      <div className={styles.actions}>
+      <div
+        className={styles.colorBar}
+        style={{ backgroundColor: color }}
+      ></div>
+
+      <section className={styles.actions}>
         <button onClick={editHandler}>
           <i className="fa-solid fa-pencil"></i>
         </button>
         <button onClick={removeHandler}>
           <i className="fa-solid fa-trash-can"></i>
         </button>
-      </div>
+      </section>
     </div>
   )
 }

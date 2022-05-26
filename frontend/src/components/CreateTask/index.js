@@ -14,6 +14,7 @@ const CreateTask = ({ isOpen, setIsOpen, update }) => {
   const [durationInput, setDurationInput] = useState('00:00');
   const [dispBeginInput, setDispBeginInput] = useState('00:00');
   const [dispEndInput, setDispEndInput] = useState('00:00');
+  const [colorInput, setColorInput] = useState('#ff7a8e');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -42,6 +43,10 @@ const CreateTask = ({ isOpen, setIsOpen, update }) => {
 
   const handleDispEndInput = useCallback((e) => {
     setDispEndInput(e.target.value);
+  }, []);
+
+  const handleColorInput = useCallback((e) => {
+    setColorInput(e.target.value);
   }, []);
 
   const handleAddTask = useCallback(() => {
@@ -74,7 +79,8 @@ const CreateTask = ({ isOpen, setIsOpen, update }) => {
       weekDays,
       timeBegin: undefined,
       timeEnd: undefined,
-      isDone: false
+      isDone: false,
+      color: colorInput
     }
 
     const currentTasks = JSON.parse(localStorage.getItem('tasks'));
@@ -92,10 +98,11 @@ const CreateTask = ({ isOpen, setIsOpen, update }) => {
     setDurationInput('00:00');
     setDispBeginInput('00:00');
     setDispEndInput('00:00');
+    setColorInput('#ff7a8e');
 
     toast.success('Tarefa criada com sucesso!');
 
-  }, [descriptionInput, durationInput, dispBeginInput, dispEndInput, weekDays, setIsOpen, update]);
+  }, [descriptionInput, durationInput, dispBeginInput, dispEndInput, colorInput, weekDays, setIsOpen, update]);
 
   useEffect(() => {
     setIsModalOpen(isOpen);
@@ -110,12 +117,23 @@ const CreateTask = ({ isOpen, setIsOpen, update }) => {
 
           <div className={styles.inputField}>
             <label>Descrição</label>
-            <input
-              type="text"
-              placeholder="Ex. Academia"
-              value={descriptionInput}
-              onChange={(e) => handleDescriptionInput(e)}
-            />
+            <div>
+              <input
+                type="text"
+                placeholder="Ex. Academia"
+                value={descriptionInput}
+                onChange={(e) => handleDescriptionInput(e)}
+                style={{ flex: 1, marginRight: '8px' }}
+              />
+              <div className={styles.colorPickerWrapper}>
+                <input 
+                  type="color"
+                  onChange={(e) => handleColorInput(e)}
+                  value={colorInput}
+                />
+                <i className="fa-solid fa-eye-dropper"></i>
+              </div>
+            </div>
           </div>
 
           <div className={styles.inputField}>

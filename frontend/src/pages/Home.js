@@ -119,6 +119,7 @@ const Home = () => {
                                 timeBegin={task.timeBegin}
                                 timeEnd={task.timeEnd}
                                 duration={task.duration}
+                                color={task.color}
                                 editHandler={() => editTask(task, 0)}
                                 removeHandler={() => handleRemoveTask(task, 0)}
                             />
@@ -137,6 +138,7 @@ const Home = () => {
                                 timeBegin={task.timeBegin}
                                 timeEnd={task.timeEnd}
                                 duration={task.duration}
+                                color={task.color}
                                 editHandler={() => editTask(task, 1)}
                                 removeHandler={() => handleRemoveTask(task, 1)}
                             />
@@ -164,6 +166,7 @@ const Home = () => {
                                     timeBegin={task.timeBegin}
                                     timeEnd={task.timeEnd}
                                     duration={task.duration}
+                                    color={task.color}
                                     editHandler={() => editTask(task, 2, name)}
                                     removeHandler={() => handleRemoveTask(task, 2, name)}
                                     markTask={(checked) => markTask(task, name, checked)}

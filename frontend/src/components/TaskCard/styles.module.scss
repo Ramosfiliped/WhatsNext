@@ -19,20 +19,47 @@ p {
   > p:nth-of-type(3) {
     margin-top: 10px;
   }
+
+  padding-left: 30px;
+
+  > div, p {
+    transition: 0.3s;
+  }
+
+  &:hover {
+    > div, p {
+      opacity: 0.2;
+    }
+  }
 }
 
 .small {
   padding: 6px 10px;
+  padding-left: 18px;
+
   p {
     font-size: 12px !important;
   }
+  
+  .colorBar {
+    width: 12px !important;
+  }
+}
+
+.colorBar {
+  height: 100%;
+  width: 16px;
+  left: 0;
+  top: 0;
+  background-color: red;
+  position: absolute;
 }
 
 .actions {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.8);
+  // background-color: rgba(255, 255, 255, 0.8);
   opacity: 0;
 
   display: flex;
@@ -40,6 +67,7 @@ p {
   justify-content: center;
 
   gap: 8px;
+  margin-right: 8px;
 
   transition: 0.3s;
 
