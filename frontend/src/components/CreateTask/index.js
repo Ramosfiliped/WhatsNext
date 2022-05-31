@@ -10,7 +10,7 @@ import Modal from '../Modal';
 const CreateTask = ({ isOpen, setIsOpen, update }) => {
 
   const [descriptionInput, setDescriptionInput] = useState('');
-  const [weekDays, setWeekDays] = useState([false, false, false, true, false, false, false]);
+  const [weekDays, setWeekDays] = useState([false, false, false, false, false, false, false]);
   const [durationInput, setDurationInput] = useState('00:00');
   const [dispBeginInput, setDispBeginInput] = useState('00:00');
   const [dispEndInput, setDispEndInput] = useState('00:00');
@@ -23,7 +23,7 @@ const CreateTask = ({ isOpen, setIsOpen, update }) => {
   }, []);
 
   const handleWeekDaysClick = useCallback((index) => {
-    const newWeekDays = [false, false, false, false, false, false, false];
+    const newWeekDays = weekDays.slice();
     newWeekDays[index] = !newWeekDays[index];
     setWeekDays(newWeekDays);
   }, [weekDays]);
@@ -94,7 +94,7 @@ const CreateTask = ({ isOpen, setIsOpen, update }) => {
     update();
 
     setDescriptionInput('');
-    setWeekDays([false, false, false, true, false, false, false]);
+    setWeekDays([false, false, false, false, false, false, false]);
     setDurationInput('00:00');
     setDispBeginInput('00:00');
     setDispEndInput('00:00');

@@ -8,7 +8,7 @@ import EditTask from "../components/EditTask";
 import TaskCard from "../components/TaskCard";
 import NotificationModal from "../components/NotificationModal";
 
-import scheduleAlgorithm from "../utils/scheduleAlgorithm";
+import { scheduleAlgorithm, removeSubTasks } from "../utils/scheduleAlgorithm";
 
 import styles from './styles.module.scss';
 
@@ -75,19 +75,23 @@ const Home = () => {
 
     const removeTask = useCallback(() => {
         const { task, region, day } = removingTask;
+
+        let newTasks;
         
         if (region === 0) {
             const index = tasks.toBeAllocated.findIndex(_task => _task.id === task.id);
             tasks.toBeAllocated.splice(index, 1);
+            newTasks = tasks;
         } else if (region === 1) {
             const index = tasks.nonAllocated.findIndex(_task => _task.id === task.id);
             tasks.nonAllocated.splice(index, 1);
+            newTasks = tasks;
         } else {
-            const index = tasks[day].findIndex(_task => _task.id === task.id);
-            tasks[day].splice(index, 1);
+            const newPlanning = removeSubTasks(task, tasks, task.id);
+            newTasks = newPlanning;
         }
 
-        localStorage.setItem('tasks', JSON.stringify(tasks));
+        localStorage.setItem('tasks', JSON.stringify(newTasks));
         updateTasks();
 
         setIsNotificationOpen(false);
