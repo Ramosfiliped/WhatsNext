@@ -181,7 +181,6 @@ function insertIsValid(planning, task) {
         for(let k = 0; k < planning[j].length; k++){
 
           const timeWindow = [];
-          console.log({j, k});
           if (k == 0) {
             timeWindow.push([[0, 0], planning[j][k].timeBegin]);
           }
@@ -199,7 +198,6 @@ function insertIsValid(planning, task) {
 
           for (let m = 0; m < timeWindows.length; m++) {
             if (timeContained([task.dispBegin, task.dispEnd], timeWindows[m])) {
-              console.log(timeWindows[m]);
               return { valid: true, timeWindow: timeWindows[m] };
             }
           }

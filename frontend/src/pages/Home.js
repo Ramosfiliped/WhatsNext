@@ -8,7 +8,7 @@ import EditTask from "../components/EditTask";
 import TaskCard from "../components/TaskCard";
 import NotificationModal from "../components/NotificationModal";
 
-import { scheduleAlgorithm, removeSubTasks } from "../utils/scheduleAlgorithm";
+import { scheduleAlgorithm, removeSubTasks } from "../backend/scheduleAlgorithm";
 
 import styles from './styles.module.scss';
 
