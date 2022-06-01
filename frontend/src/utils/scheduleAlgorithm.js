@@ -82,6 +82,19 @@ function joinWeekDays(task, planning, id){
     return weekDays;
 }
 
+function createTimeWindows(timeWindow, duration) {
+  const arr = [];
+
+  let i = timeWindow[0];
+
+  while (timeLTE(i, calcTimeEnd(timeWindow[1], -duration))) {
+    arr.push([i, calcTimeEnd(i, duration)]);
+    i = calcTimeEnd(i, 5);
+  }
+
+  return arr;
+}
+
 // Creates a new task, with only one week day, and that has an id of ther original task, concatenated with '_sub'
 function createNewSubTask(task, weekDay){
     let newTask = new Task();
@@ -166,23 +179,29 @@ function insertIsValid(planning, task) {
       if (planning[j].length > 0) {
         allEmpty = 0
         for(let k = 0; k < planning[j].length; k++){
-        
-          if (k == 0 &&
-            timeDifference(planning[j][k].timeBegin, [0, 0]) >= task.duration &&
-            timeContained([[0, 0], planning[j][k].timeBegin], [task.dispBegin, task.dispEnd])) {
-              return true;
+
+          const timeWindow = [];
+          console.log({j, k});
+          if (k == 0) {
+            timeWindow.push([[0, 0], planning[j][k].timeBegin]);
+          }
+          if (k == planning[j].length - 1) {
+            timeWindow.push([planning[j][k].timeEnd, [23, 59]]);
+          } else {
+            timeWindow.push([planning[j][k].timeEnd, planning[j][k+1].timeBegin]);
           }
 
-          if (k == planning[j].length - 1 &&
-            timeDifference([23, 59], planning[j][k].timeEnd) >= task.duration &&
-            timeContained([planning[j][k].timeEnd, [23, 59]], [min2vet(vet2min(task.dispBegin) + task.duration), task.dispEnd]) &&
-            timeGTE(min2vet(timeDifference(task.dispEnd, min2vet(task.duration))), planning[j][k].timeEnd)) {
-              return true;
-          }
-          
-          if (k != planning[j].length - 1 && timeDifference(planning[j][k+1].timeBegin, planning[j][k].timeEnd) >= task.duration &&
-            timeContained([planning[j][k].timeEnd, planning[j][k+1].timeBegin], [task.dispBegin, task.dispEnd])) {
-            return true;
+          const timeWindows = [];
+          timeWindow.forEach(tw => {
+            const newTw = createTimeWindows(tw, task.duration);
+            timeWindows.push(...newTw);
+          });
+
+          for (let m = 0; m < timeWindows.length; m++) {
+            if (timeContained([task.dispBegin, task.dispEnd], timeWindows[m])) {
+              console.log(timeWindows[m]);
+              return { valid: true, timeWindow: timeWindows[m] };
+            }
           }
         }
       } 
@@ -225,7 +244,7 @@ function calcTimeEnd(timeBegin, duration) {
 }
 
 // Mudanças aqui também -> para cada dia da semana de uma task, uma nova subtask é criada
-function insertTask(planning, task) {
+function insertTask(planning, task, timeWindow) {
   task.weekDays.forEach((day, i) => {
     const currTask = Object.assign(task, {});
     if (day) {
@@ -241,8 +260,9 @@ function insertTask(planning, task) {
         for (let k = 0; k < planning[j].length; k++){
 
           if (k == planning[j].length - 1) {
-            newTask.timeBegin = [planning[j][k].timeEnd[0], planning[j][k].timeEnd[1]];
+            newTask.timeBegin = timeWindow[0];
             newTask.timeEnd = calcTimeEnd(newTask.timeBegin, newTask.duration);
+
             planning[j].push(newTask)
             return;
           }
@@ -265,16 +285,24 @@ function insertTask(planning, task) {
 
 function scheduleAlgorithm(planning) {
   planning.toBeAllocated.forEach(task => {
-    const valid = insertIsValid(planning, task);
+    const { valid, timeWindow } = insertIsValid(planning, task);
     if (valid) {
-      insertTask(planning, task)
+      insertTask(planning, task, timeWindow)
     } else {
       planning.nonAllocated.push(task)
     }
   });
+
+  for (let i = 0; i < 7; i++) {
+    const day = indexToWeekDay(i);
+    planning.day = planning[day].sort((a, b) => {
+      if (a.timeBegin > b.timeBegin) return 1;
+      return -1;
+    });
+  }
   
   planning.toBeAllocated = [];
   return planning;
 }
 
-export { scheduleAlgorithm, removeSubTasks };
+export { scheduleAlgorithm, removeSubTasks, createTimeWindows };
