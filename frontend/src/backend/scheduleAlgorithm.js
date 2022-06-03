@@ -207,7 +207,7 @@ function insertIsValid(planning, task) {
   }
 
   if (allEmpty) {
-    return true;
+    return { valid: true, timeWindow: task.dispBegin };
   }
   
   return false;
